@@ -1,29 +1,29 @@
 {
-    "name": "base-bailey-memory",
+    "name": "miventa-bot",
     "version": "1.0.0",
     "description": "",
-    "main": "app.js",
+    "main": "src/index.js",
+    "type": "commonjs",
     "scripts": {
-        "prestart": "npx eslint . --no-ignore",
-        "pre-copy": "cd .. && npm run  copy.lib base-baileys-memory",
-        "start": "node src/index.js --host 0.0.0.0"
+        "lint": "eslint . --no-ignore",
+        "dev": "npm run lint && nodemon ./src/index.js",
+        "prod": "node ./src/index.js --host 0.0.0.0"
     },
     "keywords": [],
     "dependencies": {
-        "@bot-whatsapp/bot": "latest",
-        "@bot-whatsapp/cli": "latest",
-        "@bot-whatsapp/database": "latest",
-        "@bot-whatsapp/portal": "latest",
-        "@bot-whatsapp/provider": "latest",
-        "@whiskeysockets/baileys": "latest",
-        "cache-manager": "5.2.4",
+        "@builderbot/bot": "1.2.8",
+        "@builderbot/provider-baileys": "1.2.8",
         "dotenv": "^16.4.5",
-        "express": "^4.19.2",
-        "wa-sticker-formatter": "4.4.4"
+        "express": "^4.21.2",
+        "node-cache": "^5.1.2"
     },
     "devDependencies": {
-        "eslint": "^8.52.0",
-        "eslint-plugin-bot-whatsapp": "latest"
+        "eslint": "^8.57.0",
+        "eslint-plugin-builderbot": "latest",
+        "nodemon": "^3.1.0"
+    },
+    "overrides": {
+        "sharp": "0.33.3"
     },
     "author": "",
     "license": "ISC"

@@ -1,4 +1,6 @@
-const BotWhatsapp = require("@bot-whatsapp/bot");
-const ProviderWS = require("@bot-whatsapp/provider/baileys");
+const { createProvider } = require("@builderbot/bot");
+const { BaileysProvider } = require("@builderbot/provider-baileys");
 
-module.exports = BotWhatsapp.createProvider(ProviderWS);
+module.exports = createProvider(BaileysProvider, {
+  version: [2, 3000, 1023223821],
+});

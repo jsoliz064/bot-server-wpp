@@ -1,9 +1,34 @@
 ### CHATBOT Whatsapp (Baileys Provider)
 
-**Con esta librería, puedes construir flujos automatizados de conversación de manera agnóstica al proveedor de WhatsApp,** configurar respuestas automatizadas para preguntas frecuentes, recibir y responder mensajes de manera automatizada, y hacer un seguimiento de las interacciones con los clientes.  Además, puedes configurar fácilmente disparadores que te ayudaran a expandir las funcionalidades sin límites. **[Ver documentación](https://bot-whatsapp.netlify.app/)**
-
+## Localhost
 
 ```
 npm install
-npm start
+npm install --cpu=wasm32 sharp
+npm run start
+```
+
+## Produccion
+
+1. Copie el archivo .env.example a .env
+
+```
+cp .env.example .env
+```
+
+2. Complete las variables del .env
+
+```
+PORT=3000
+```
+3. Instale los modulos
+
+```
+docker-compose run --rm miventa-bot npm install --ignore-scripts=false --foreground-scripts --verbose sharp
+```
+
+4. Ejecute el contenedor de Pedidos Bot
+
+```
+docker-compose up -d
 ```

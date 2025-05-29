@@ -1,17 +1,8 @@
-const BotWhatsapp = require("@bot-whatsapp/bot");
-const flow = require("./flow");
-const database = require("./database");
-const provider = require("./provider");
-const { initServer } = require("./express/server");
+process.env.TZ = "America/La_Paz";
 
-const main = async () => {
-  const botInstance = await BotWhatsapp.createBot({
-    database,
-    provider,
-    flow,
-  });
+const Server = require("./services/server");
 
-  initServer(botInstance);
-};
+const server=new Server();
 
-main();
+
+server.listen();

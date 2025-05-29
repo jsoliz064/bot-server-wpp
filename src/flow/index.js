@@ -1,3 +1,3 @@
-const BotWhatsapp = require("@bot-whatsapp/bot");
+const { createFlow } = require("@builderbot/bot");
 
-module.exports = BotWhatsapp.createFlow([]);
+module.exports = createFlow([]);
