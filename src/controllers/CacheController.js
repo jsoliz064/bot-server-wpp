@@ -1,4 +1,4 @@
-const NodeCache = require("node-cache");
+import NodeCache from "node-cache";
 
 // Crear una instancia de la caché sin un tiempo de expiración predeterminado
 const cache = new NodeCache();
@@ -23,4 +23,4 @@ const getCache = (key) => {
   return cache.get(key);
 };
 
-module.exports = { setCache, getCache };
+export { setCache, getCache };

@@ -4,7 +4,6 @@
 
 ```
 npm install
-npm install --cpu=wasm32 sharp
 npm run start
 ```
 
@@ -24,10 +23,10 @@ PORT=3000
 3. Instale los modulos
 
 ```
-docker-compose run --rm miventa-bot npm install --ignore-scripts=false --foreground-scripts --verbose sharp
+docker-compose run --rm lamotico-bot npm install --ignore-scripts=false --foreground-scripts --verbose sharp
 ```
 
-4. Ejecute el contenedor de Pedidos Bot
+4. Ejecute el contenedor
 
 ```
 docker-compose up -d

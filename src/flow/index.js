@@ -1,3 +1,3 @@
-const { createFlow } = require("@builderbot/bot");
+import { createFlow } from "@builderbot/bot";
 
-module.exports = createFlow([]);
+export default createFlow([]);

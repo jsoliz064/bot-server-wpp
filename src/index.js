@@ -1,6 +1,9 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 process.env.TZ = "America/La_Paz";
 
-const Server = require("./services/server");
+import Server from "./services/server.js";
 
 const server=new Server();
 

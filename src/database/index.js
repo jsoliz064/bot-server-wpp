@@ -1,2 +1,2 @@
-const { MemoryDB } = require("@builderbot/bot");
-module.exports = new MemoryDB();
+import { MemoryDB } from "@builderbot/bot";
+export default new MemoryDB();

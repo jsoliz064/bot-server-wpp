@@ -1,5 +1,5 @@
-const { writeFileSync, unlinkSync } = require("fs");
-const { join } = require("path");
+import { writeFileSync, unlinkSync } from "fs";
+import { join } from "path";
 
 const saveFileBase64 = (fileBase64, fileName = null) => {
   try {
@@ -44,4 +44,4 @@ const getExtensionByBase64 = (fileBase64) => {
   return extension;
 };
 
-module.exports = { saveFileBase64, deleteFilePath, getExtensionByBase64 };
+export { saveFileBase64, deleteFilePath, getExtensionByBase64 };

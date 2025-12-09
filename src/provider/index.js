@@ -1,6 +1,10 @@
-const { createProvider } = require("@builderbot/bot");
-const { BaileysProvider } = require("@builderbot/provider-baileys");
+import { createProvider } from "@builderbot/bot";
+// import { BaileysProvider } from "@builderbot/provider-baileys";
+import { SherpaProvider } from "@builderbot/provider-sherpa";
 
-module.exports = createProvider(BaileysProvider, {
-  version: [2, 3000, 1025190524],
+export default createProvider(SherpaProvider, {
+  // usePairingCode: true,
+  // phoneNumber: "59162691938",
+  version: [2, 3000, 1027934701],
+  browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
 });

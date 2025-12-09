@@ -1,10 +1,11 @@
-require("dotenv").config();
-const { createBot } = require("@builderbot/bot");
-const flow = require("../flow");
-const database = require("../database");
-const provider = require("../provider");
-process.env.TZ = "America/La_Paz";
+import dotenv from "dotenv";
+dotenv.config();
 
+import { createBot } from "@builderbot/bot";
+import flow from "../flow/index.js";
+import database from "../database/index.js";
+import provider from "../provider/index.js";
+process.env.TZ = "America/La_Paz";
 class Bot {
   constructor() {
     this.provider = null;
@@ -25,4 +26,4 @@ class Bot {
   }
 }
 
-module.exports = Bot;
+export default Bot;

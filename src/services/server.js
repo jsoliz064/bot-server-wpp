@@ -1,10 +1,13 @@
-require("dotenv").config();
-const express = require("express");
-const { createReadStream, readFileSync } = require("fs");
-const { join } = require("path");
-const { saveFileBase64, deleteFilePath } = require("../helpers/files");
-const { delay } = require("../helpers/index");
-const Bot = require("./bot");
+import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
+import { createReadStream, readFileSync } from "fs";
+import { join } from "path";
+import { saveFileBase64, deleteFilePath } from "../helpers/files.js";
+import { delay } from "../helpers/index.js";
+
+import Bot from "./bot.js";
 process.env.TZ = "America/La_Paz";
 
 class Server {
@@ -43,12 +46,12 @@ class Server {
           "data:image/png;base64," + imageBuffer.toString("base64");
         res.status(200).json({ imageBase64: base64Image });
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
         res.status(500).json({ error: "Failed to load image" });
       }
     });
 
-    this.app.post("/sendMessage", async (req, res) => {
+    this.app.post("/send-message", async (req, res) => {
       try {
         const { phoneNumber, message, fileBase64, fileName } = req.body;
 
@@ -68,14 +71,14 @@ class Server {
           message: "Mensaje enviado correctamente",
         });
       } catch (error) {
-        console.log(error);
+        console.log("no se puedo enviar el mensaje list: ", error.message);
         res
           .status(500)
           .json({ status: "error", message: "Error al enviar el mensaje" });
       }
     });
 
-    this.app.post("/sendMessageList", async (req, res) => {
+    this.app.post("/send-message-list", async (req, res) => {
       try {
         const { list, fileBase64, fileName } = req.body;
 
@@ -94,14 +97,12 @@ class Server {
           deleteFilePath(fileUrl);
         }
 
-        res
-          .status(200)
-          .json({
-            status: "success",
-            message: "Mensaje enviado correctamente",
-          });
+        res.status(200).json({
+          status: "success",
+          message: "Mensaje enviado correctamente",
+        });
       } catch (error) {
-        console.log(error);
+        console.log("No se pudo enviar el mensaj: ", error.message);
         res
           .status(500)
           .json({ status: "error", message: "Error al enviar el mensaje" });
@@ -139,4 +140,4 @@ class Server {
   }
 }
 
-module.exports = Server;
+export default Server;
