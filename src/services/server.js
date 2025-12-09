@@ -55,8 +55,16 @@ class Server {
       try {
         const { phoneNumber, message, fileBase64, fileName } = req.body;
 
+        console.log({
+          phoneNumber,
+          message,
+          fileBase64: fileBase64 ? true : false,
+          fileName,
+        });
+
         let fileUrl;
         if (fileBase64) {
+          console.log("fileBase64");
           fileUrl = saveFileBase64(fileBase64, fileName);
         }
 
