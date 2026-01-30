@@ -1,12 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
-
 import express from "express";
 import { createReadStream, readFileSync } from "fs";
 import { join } from "path";
 import { saveFileBase64, deleteFilePath } from "../helpers/files.js";
 import { delay } from "../helpers/index.js";
-
 import Bot from "./bot.js";
 process.env.TZ = "America/La_Paz";
 
@@ -38,16 +36,80 @@ class Server {
       fileStream.pipe(res);
     });
 
+    this.app.get("/status", async (_, res) => {
+      try {
+        const isConnected = this.bot.isConnected();
+        const isStarted = this.bot.isStarted();
+
+        res.status(200).json({ isConnected, isStarted });
+      } catch (error) {
+        res
+          .status(500)
+          .json({ message: error.message || "Failed to load image" });
+      }
+    });
+
+    this.app.post("/control", async (req, res) => {
+      try {
+        const { status } = req.body;
+        if (
+          !status ||
+          ["start", "stop", "restart"].includes(status) === false
+        ) {
+          res.status(400).json({ error: "Status is required, start or stop" });
+        }
+
+        if (status === "start") {
+          await this.bot.initBot();
+          return res
+            .status(200)
+            .json({ status: "success", message: "Bot started" });
+        }
+
+        if (status === "stop") {
+          await this.bot.shutdown();
+          return res
+            .status(200)
+            .json({ status: "success", message: "Bot shutdown" });
+        }
+
+        await this.bot.shutdown();
+        await this.bot.initBot();
+        res.status(200).json({ status: "success", message: "Bot restarted" });
+      } catch (error) {
+        res
+          .status(500)
+          .json({ message: error.message || "Failed to shutdown bot" });
+      }
+    });
+
+    this.app.post("/close-session", async (req, res) => {
+      try {
+        await this.bot.closeSession();
+
+        return res
+          .status(200)
+          .json({ status: "success", message: "Bot session closed" });
+      } catch (error) {
+        res
+          .status(500)
+          .json({ message: error.message || "Failed to close session bot" });
+      }
+    });
+
     this.app.get("/qr", async (_, res) => {
       try {
         const PATH_QR = join(process.cwd(), "bot.qr.png");
         const imageBuffer = readFileSync(PATH_QR);
         const base64Image =
           "data:image/png;base64," + imageBuffer.toString("base64");
-        res.status(200).json({ imageBase64: base64Image });
+
+        const isConnected = this.bot.isConnected();
+
+        res.status(200).json({ imageBase64: base64Image, isConnected });
       } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: "Failed to load image" });
+        console.log(error);
+        res.status(500).json({ message: "Failed to load image" });
       }
     });
 
@@ -55,20 +117,12 @@ class Server {
       try {
         const { phoneNumber, message, fileBase64, fileName } = req.body;
 
-        console.log({
-          phoneNumber,
-          message,
-          fileBase64: fileBase64 ? true : false,
-          fileName,
-        });
-
         let fileUrl;
         if (fileBase64) {
-          console.log("fileBase64");
           fileUrl = saveFileBase64(fileBase64, fileName);
         }
 
-        await this.sendMessage(phoneNumber, message, fileUrl);
+        await this.bot.sendMessage(phoneNumber, message, fileUrl);
 
         if (fileUrl) {
           deleteFilePath(fileUrl);
@@ -79,10 +133,11 @@ class Server {
           message: "Mensaje enviado correctamente",
         });
       } catch (error) {
-        console.log("no se puedo enviar el mensaje list: ", error.message);
-        res
-          .status(500)
-          .json({ status: "error", message: "Error al enviar el mensaje" });
+        console.log(error);
+        res.status(500).json({
+          status: "error",
+          message: error.message || "Error al enviar el mensaje",
+        });
       }
     });
 
@@ -97,7 +152,11 @@ class Server {
 
         for (const contact of list) {
           console.log(contact);
-          await this.sendMessage(contact.phoneNumber, contact.message, fileUrl);
+          await this.bot.sendMessage(
+            contact.phoneNumber,
+            contact.message,
+            fileUrl,
+          );
           await delay(500);
         }
 
@@ -110,36 +169,29 @@ class Server {
           message: "Mensaje enviado correctamente",
         });
       } catch (error) {
-        console.log("No se pudo enviar el mensaj: ", error.message);
+        console.log(error);
         res
           .status(500)
           .json({ status: "error", message: "Error al enviar el mensaje" });
       }
     });
-  }
 
-  sendMessage = async (phoneNumber, message, fileUrl) => {
-    const id = `${phoneNumber}@s.whatsapp.net`;
-    console.log(id);
-    let extensionImages = ["png", "jpg", "jpeg", "webp", "gif"];
-    let extensionVideos = ["mp4"];
+    this.app.post("/disable-phone-number", async (req, res) => {
+      try {
+        const { phoneNumber } = req.body;
 
-    const bot = this.bot.provider;
-    if (fileUrl) {
-      const extension = fileUrl.split(".").pop().toLowerCase();
-      if (extensionImages.includes(extension)) {
-        await bot.sendImage(id, fileUrl, message);
-      } else if (extensionVideos.includes(extension)) {
-        await bot.sendVideo(id, fileUrl, message);
-      } else {
-        await bot.sendText(id, message);
-        await bot.sendFile(id, fileUrl);
+        this.bot.setPhoneNumberDisabled(phoneNumber);
+
+        res.status(200).json({
+          status: "success",
+          message: "Phone number disabled successfully",
+        });
+      } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ status: "error", message: error.message });
       }
-    } else {
-      await bot.sendText(id, message);
-    }
-    console.log(`message send to ${phoneNumber}`);
-  };
+    });
+  }
 
   listen() {
     this.app.listen(this.port, () => {
