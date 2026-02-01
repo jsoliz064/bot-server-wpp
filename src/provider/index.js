@@ -6,5 +6,5 @@ export default createProvider(SherpaProvider, {
   // usePairingCode: true,
   // phoneNumber: "59162691938",
   version: [2, 3000, 1027934701],
-  // browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
+  browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
 });
