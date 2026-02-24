@@ -176,21 +176,6 @@ class Server {
       }
     });
 
-    this.app.post("/disable-phone-number", async (req, res) => {
-      try {
-        const { phoneNumber } = req.body;
-
-        this.bot.setPhoneNumberDisabled(phoneNumber);
-
-        res.status(200).json({
-          status: "success",
-          message: "Phone number disabled successfully",
-        });
-      } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ status: "error", message: error.message });
-      }
-    });
   }
 
   listen() {
