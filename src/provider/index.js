@@ -5,6 +5,6 @@ import { SherpaProvider } from "@builderbot/provider-sherpa";
 export default createProvider(SherpaProvider, {
   // usePairingCode: true,
   // phoneNumber: "59162691938",
-  version: [2, 3000, 1033971006],
+  version: [2, 3000, 1043123085],
   browser: ["Windows", "Chrome", "Chrome 114.0.5735.198"],
 });
